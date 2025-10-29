@@ -1,0 +1,31 @@
+{
+  "name": "testing-framework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/santiocampo1/testing.git"
+  },
+  "keywords": [],
+  "author": "Santiago Ocampo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/santiocampo1/testing/issues"
+  },
+  "homepage": "https://github.com/santiocampo1/testing#readme",
+  "dependencies": {
+    "axios": "^1.13.0",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.38.0",
+    "js-yaml": "^4.1.0",
+    "prettier": "^3.6.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-html-reporters": "^3.1.7"
+  }
+}
