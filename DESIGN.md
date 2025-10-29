@@ -10,7 +10,7 @@ You need to design a system that:
 How would you design and implement this real-time data pipeline?
 
 ## 1. Architecture Diagram
-Below is a textual representation of the system architecture using ASCII art for clarity. The flow is from the WebSocket API to the database, with intermediate components for processing and buffering.
+Below is the architecture diagram for the real-time data pipeline:
 
 ![Architecture Diagram](./images/architecture.png)
 
@@ -20,6 +20,7 @@ Explanation: The WebSocket client connects to the API and pushes data to a proce
 - **WebSocket Client Library**: ws (for Node.js). It is lightweight, efficient for high-volume streams, and supports automatic reconnection with exponential backoff. It's simple for server-side use and has low overhead compared to Socket.io, which is more suited for client-server bidirectional communication.
 - **Database**: PostgreSQL. It is a robust relational database with excellent support for structured data (e.g., tables for fixtures, odds, bets) and JSONB for flexible event payloads. It handles high write loads with indexing and can scale with partitioning. Alternatives like MongoDB could be used for unstructured data, but PostgreSQL is better for historical analysis with SQL queries.
 - **Message Queue**: RabbitMQ. It provides reliable queuing with AMQP protocol, supports high throughput (thousands of messages per minute), and allows for easy scaling with clustering. It ensures no data loss with acknowledgments and retries. Kafka could be an alternative for even higher volume or distributed setups, but RabbitMQ is simpler for this scale.
+- **Programming Language/Framework**: Node.js with Express. Node.js is excellent for real-time I/O operations like WebSocket handling, with non-blocking async nature for high concurrency. Express adds a lightweight server framework for the processing layer, making it easy to handle routes, middleware for validation, and integration with queues. Alternatives like Python with FastAPI could work for simplicity, but Node.js excels in performance for event-driven systems.
 
 ## 3. Data Model
 - **Tables**:
