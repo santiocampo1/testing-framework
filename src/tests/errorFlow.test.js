@@ -1,25 +1,21 @@
 const fs = require('fs');
 const path = require('path');
-const { generateToken, getBalance, placeBet } = require('../helpers/apiHelper');
+const { generateToken, placeBet } = require('../helpers/apiHelper');
 
-describe('Simple Bet E2E Flow', () => {
+describe('Error Validation E2E Flow', () => {
     let config;
 
     beforeAll(() => {
-        const configPath = path.join(__dirname, '../config/simpleBet.json');
+        const configPath = path.join(__dirname, '../config/errorFlow.json');
         config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
         config.userId = config.userId || process.env.DEFAULT_USER_ID;
         config.userKey = config.userKey || process.env.DEFAULT_USER_KEY;
     });
 
-    it('should complete simple bet flow successfully', async () => {
+    it('should validate error for invalid bet', async () => {
         const token = await generateToken();
         expect(token).toBeDefined();
-        expect(typeof token).toBe('string');
-
-        const initialBalance = await getBalance(config.userId, config.userKey, token);
-        expect(initialBalance).toBeDefined();
 
         const odd = config.odd;
         const betIdValue = config.bet_id;
@@ -44,20 +40,7 @@ describe('Simple Bet E2E Flow', () => {
             }
         };
 
-        let betResponse;
-        try {
-            betResponse = await placeBet(betBody, token);
-            expect(betResponse.betId).toBeDefined();
-        } catch (error) {
-            expect(error.message).toContain('400');
-        }
-
-        const finalBalance = await getBalance(config.userId, config.userKey, token);
-        expect(finalBalance).toBeLessThanOrEqual(initialBalance); 
-
-        if (betResponse) {
-            const potentialWinnings = config.stake * odd;
-            expect(betResponse.possibleWin).toBeCloseTo(potentialWinnings, 2);
-        }
+        await expect(placeBet(betBody, token)).rejects.toThrow();
+        await expect(placeBet(betBody, 'invalid_token')).rejects.toThrow(/401/);
     }, 30000);
 });

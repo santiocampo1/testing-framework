@@ -5,7 +5,7 @@
     "market_type": "1X2",
     "bet_id": "home_win",
     "odd": 2.5,
-    "stake": 100.00,
+    "stake": -100.00,
     "userId": "1858035947",
-    "userKey": "1_simple"
+    "userKey": "1_error"
 }

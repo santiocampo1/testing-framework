@@ -120,6 +120,33 @@ async function placeBet(body, token) {
     }
 }
 
+async function addBetToCombo(body) {
+    try {
+        const response = await api.post('/add-bet-to-combo', body);
+        return response.data; 
+    } catch (error) {
+        throw new Error(`Add bet to combo failed: ${error.message}`);
+    }
+}
+
+async function getComboOdds(body) {
+    try {
+        const response = await api.post('/get-combo-odds', body);
+        return response.data; 
+    } catch (error) {
+        throw new Error(`Get combo odds failed: ${error.message}`);
+    }
+}
+
+async function placeComboBet(body) {
+    try {
+        const response = await api.post('/place-combo-bet', body);
+        return response.data;
+    } catch (error) {
+        throw new Error(`Place combo bet failed: ${error.message}`);
+    }
+}
+
 module.exports = {
     generateToken,
     validateUser,
@@ -128,4 +155,7 @@ module.exports = {
     getOdds,
     getTournaments,
     placeBet,
+    addBetToCombo,
+    getComboOdds,
+    placeComboBet,
 };

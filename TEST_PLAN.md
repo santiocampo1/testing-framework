@@ -18,9 +18,9 @@ I analyzed the available endpoints in the API docs (Swagger UI) and tested sever
   - POST /place-bet: Places simple bet. Headers: accept-language (en), country-code (US), token. Body: JSON with user and betInfo (amount, betId array, source). Response: JSON with "message", "betId", "possibleWin". Tested: Acepta betId como 'home_win' o IDs numéricos, deducta balance.
 
 - **Combo Endpoints**:
-  - POST /add-bet-to-combo: Adds bet to combo. Body: JSON with betInfo and betsAdded array.
-  - POST /get-combo-odds: Calculates combo odds. Body: JSON with betInfo array and fixture.
-  - POST /place-combo-bet: Places combo bet. Body: JSON with betsInfo array, amount, user.
+  - POST /add-bet-to-combo: Adds bet to combo. Body: JSON with betInfo and betsAdded array. Response: JSON with "message", "userBetId", "betIds", "status".
+  - POST /get-combo-odds: Calculates combo odds. Body: JSON with betInfo array and fixture. Response: String or JSON with odd.
+  - POST /place-combo-bet: Places combo bet. Body: JSON with betsInfo array, amount, user. Response: JSON with "status", "message", "betId", "profit", "odd".
 
 
 ## Identified Test Cases
@@ -50,29 +50,28 @@ Descriptions of flows to automate:
 1. **Simple Bet Flow**:
    - Generate token.
    - Get initial balance (use userId/test values from config).
-   - Get fixtures for sport/tournament from config (or dynamic with active filter).
-   - Get odds for market (e.g. "1X2" – handle if null/Inactive: fallback to hardcoded for mock issues).
-   - Build body and place bet.
+   - Build body with hardcoded fixture/odds (due to mock inactive data).
+   - Place bet.
    - Get final balance and validate deduction + potential winnings (stake * odd).
-   - Validations: Token defined, balance updated, betId returned, winnings calc.
+   - Validations: Token defined, balance updated (toBeLessThan for shared state), betId returned, winnings calc.
 
 2. **Combo Bet Flow**:
    - Generate token.
-   - For each selection in config: Get fixture, odds, add to combo.
+   - For each selection in config: Add to combo with hardcoded values.
    - Calculate total odds via API and manual (product of odds, tolerance 0.01).
    - Place combo bet.
-   - Validate balance updated, combo_bet_id, winnings.
+   - Validate balance updated, betId, winnings.
 
 3. **Error Validation Flow** (new important test):
    - Generate valid token.
-   - Attempt simple/combo bet with invalid inputs (e.g. negative stake, nonexistent fixtureId, invalid token).
-   - Validate error responses (e.g. 422 Validation Error, details in body).
-   - Why important: Ensures error handling in real integration.
+   - Attempt simple bet with invalid inputs (negative stake, invalid token).
+   - Validate rejects with error (e.g. 401 for bad token).
+   - Why important: Ensures robust error handling in integration.
 
 ## Parameterization Strategy
 - Tests will read configs from JSON files in src/config/ (e.g. simpleBet.json, comboBet.json).
-- Configurable params: sport_id, tournament_id, fixture_id, market_type, stake, bet_id, odd, selections (array with {sport_id, market}).
-- Strategy: Use fs.readFileSync in tests to load JSON. Allow overrides via env or CLI args for flexibility. For mock issues, support hardcoded fallback for odds/fixtures.
+- Configurable params: sport_id, tournament_id, fixture_id, market_type, stake, bet_id, odd, selections (array with {sport_id, market, fixture_id, tournament_id, bet_id, odd}).
+- Strategy: Use fs.readFileSync in tests to load JSON. Allow overrides via env or CLI args for flexibility. For mock issues, support hardcoded fallback for odds/fixtures. Parameters are logged in tests for visibility in reports.
 - Example simpleBet.json:
   ```json
   {

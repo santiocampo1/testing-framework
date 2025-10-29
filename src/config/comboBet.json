@@ -1,0 +1,31 @@
+{
+  "selections": [
+    {
+      "sport_id": 1,
+      "market": "1X2",
+      "fixture_id": "27907678",
+      "tournament_id": "566",
+      "bet_id": "home_win",
+      "odd": 2.5
+    },
+    {
+      "sport_id": 1,
+      "market": "Over/Under",
+      "fixture_id": "27907678",
+      "tournament_id": "566",
+      "bet_id": "over",
+      "odd": 1.8
+    },
+    {
+      "sport_id": 2,
+      "market": "Spread",
+      "fixture_id": "27907678",
+      "tournament_id": "566",
+      "bet_id": "home_spread",
+      "odd": 2.0
+    }
+  ],
+  "stake": 50.00,
+  "userId": "1858035947",
+  "userKey": "1_combo"
+}
