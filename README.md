@@ -21,3 +21,6 @@
 - src/config: JSON configs for parametrization.
 - reports: Generated reports.
 - TEST_PLAN.md: Test plan document.
+
+## Additional Documentation
+- See DESIGN.md for the design question response.
